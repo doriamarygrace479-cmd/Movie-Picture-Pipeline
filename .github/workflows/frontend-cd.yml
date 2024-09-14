@@ -84,6 +84,8 @@ jobs:
     name: Deploy AWS
     needs: [lint, test]
     runs-on: ubuntu-latest
+    environment:
+      name : thienvv
     defaults:
       run:
         working-directory: ./starter/frontend
