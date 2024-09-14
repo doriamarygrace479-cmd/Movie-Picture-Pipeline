@@ -112,13 +112,13 @@ jobs:
           export EXTERNALIP=$(kubectl get svc backend -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}{"\n"}{.status.loadBalancer.ingress[0].ip}')
           echo "EXTERNALIP=$EXTERNALIP"
           docker build --build-arg REACT_APP_MOVIE_API_URL=http://$EXTERNALIP -t ${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}} .
-          docker tag ${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}} 986744115855.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
-          docker push 986744115855.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
+          docker tag ${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}} 688414369996.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
+          docker push 688414369996.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
   
       - name: Deploy to AWS EKS
         run: |
           aws eks update-kubeconfig --name cluster --region us-east-1
           cd k8s
-          kustomize edit set image frontend=986744115855.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
+          kustomize edit set image frontend=688414369996.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
           kustomize build | kubectl apply -f -
   
