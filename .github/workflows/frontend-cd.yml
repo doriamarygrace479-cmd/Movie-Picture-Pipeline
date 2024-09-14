@@ -13,8 +13,6 @@ on:
   
 # Environment
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   NODE_VERSION: 18.18.0
   IMAGE_REPO_NAME: frontend
   IMAGE_TAG: latest
