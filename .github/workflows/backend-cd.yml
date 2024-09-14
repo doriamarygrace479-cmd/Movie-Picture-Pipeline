@@ -73,6 +73,8 @@ jobs:
     name: BUILD JOB
     needs: [lint, test]
     runs-on: ubuntu-latest
+    environment:
+      name : thienvv
     defaults:
       run:
         working-directory: ./starter/backend
