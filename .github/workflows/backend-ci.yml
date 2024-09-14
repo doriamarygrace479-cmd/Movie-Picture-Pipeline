@@ -9,7 +9,7 @@ on:
     branches: [ "main" ]
   
 env:
-  PYTHON_VERSION: 3.12.1
+  PYTHON_VERSION: 18.18.0
   IMAGE_REPO_NAME: backend
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

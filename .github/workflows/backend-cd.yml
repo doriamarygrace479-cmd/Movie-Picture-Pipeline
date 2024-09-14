@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
   
 env:
-  PYTHON_VERSION: 3.12.1
+  PYTHON_VERSION: 18.18.0
   IMAGE_REPO_NAME: backend
   IMAGE_TAG: latest
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -97,12 +97,12 @@ jobs:
           aws eks update-kubeconfig --name cluster --region us-east-1
           kubectl get svc
           docker build -t ${{env.IMAGE_REPO_NAME}} .
-          docker tag ${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}} 688414369996.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
-          docker push 688414369996.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
+          docker tag ${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}} 986744115855.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
+          docker push 986744115855.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
   
       - name: Deploy to AWS EKS
         run: |
           aws eks update-kubeconfig --name cluster --region us-east-1
           cd k8s
-          kustomize edit set image backend=688414369996.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
+          kustomize edit set image backend=986744115855.dkr.ecr.us-east-1.amazonaws.com/${{env.IMAGE_REPO_NAME}}:${{env.IMAGE_TAG}}
           kustomize build | kubectl apply -f -
