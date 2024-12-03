@@ -141,7 +141,7 @@ resource "aws_ecr_repository" "backend" {
 ################
 # Create an EKS cluster
 resource "aws_eks_cluster" "main" {
-  name     = "cluster"
+  name     = "cluster1"
   version  = var.k8s_version
   role_arn = aws_iam_role.eks_cluster.arn
   vpc_config {
@@ -275,7 +275,7 @@ resource "aws_codebuild_project" "codebuild" {
 
   source {
     type            = "GITHUB"
-    location        = "https://github.com/your-org/your-repo"
+    location        = "https://github.com/anhtung6950/cd12354-Movie-Picture-Pipeline"
     git_clone_depth = 1
     buildspec       = "buildspec.yml"
   }
@@ -312,19 +312,19 @@ resource "aws_iam_role_policy_attachment" "codebuild" {
 ####################
 # Github Action role
 ####################
-resource "aws_iam_user" "github_action_user" {
-  name = "github-action-user"
+resource "aws_iam_user" "github_action_user2" {
+  name = "github-action-user2"
 }
 
 resource "aws_iam_user_policy" "github_action_user_permission" {
-  user   = aws_iam_user.github_action_user.name
+  user   = aws_iam_user.github_action_user2.name
   policy = data.aws_iam_policy_document.github_policy.json
 }
 
 data "aws_iam_policy_document" "github_policy" {
   statement {
     effect    = "Allow"
-    actions   = ["ecr:*", "eks:*", "ec2:*", "iam:GetUser"]
+    actions   = ["ecr:*", "eks:*", "ec2:*"]
     resources = ["*"]
   }
 }
