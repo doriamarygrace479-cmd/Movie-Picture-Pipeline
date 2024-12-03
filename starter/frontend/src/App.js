@@ -12,7 +12,7 @@ export default function App() {
 
   return (
     <div className="container">
-      <h1>Movie Lists test2</h1>
+      <h1>Movie Lists test3</h1>
 
       <MovieList onMovieClick={handleMovieClick} />
 
