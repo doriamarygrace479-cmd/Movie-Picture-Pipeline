@@ -15,6 +15,7 @@ movies = {
     "11048": {"title": "V2ssss", "description2": "movie3sss"},
 }
 
+
 class Movies(MethodView):
     def get(self, movie_id):
         if movie_id is None:
