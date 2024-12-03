@@ -12,8 +12,8 @@ movies = {
     "11045": {"title": "V4", "description2": "movie3"},
     "11046": {"title": "V3", "description2": "movie4"},
     "11047": {"title": "V23", "description2": "movie32"},
+    "11048": {"title": "V2ssss", "description2": "movie3sss"},
 }
-
 
 class Movies(MethodView):
     def get(self, movie_id):
