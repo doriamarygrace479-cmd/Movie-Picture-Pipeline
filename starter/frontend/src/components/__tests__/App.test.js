@@ -3,7 +3,7 @@ import React from 'react';
 
 import App from '../../App';
 
-const movieHeading = process.env.FAIL_TEST ? 'WRONG_HEADING' : 'Movie Lists test5';
+const movieHeading = process.env.FAIL_TEST ? 'WRONG_HEADING' : 'Movie Lists test6';
 
 test('renders Movie List heading', () => {
   render(<App />);
