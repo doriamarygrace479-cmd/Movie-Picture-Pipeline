@@ -1,0 +1,102 @@
+name: Frontend Continuous Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'starter/frontend/**'
+
+env:
+  NODE-VERSION: 18.14
+  REACT_APP_MOVIE_API_URL: "http://a9f1bfcd94c1045c78977a914efd0998-129839935.us-east-1.elb.amazonaws.com/"
+  FRONTEND_ECR: 057999383966.dkr.ecr.us-east-1.amazonaws.com
+  
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE-VERSION}}
+      - name: Install dependencies
+        run: |
+          cd starter/frontend
+          npm ci          
+      - name: Run lint
+        run: |
+          cd starter/frontend
+          npm run lint --fix
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE-VERSION}}
+      - name: Install dependencies
+        run: |
+          cd starter/frontend
+          npm ci
+      - name: Run tests 
+        run: |
+          cd starter/frontend
+          npm test --passWithNoTests
+        
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{env.NODE-VERSION}}
+      - name: Install dependencies
+        run: |
+          cd starter/frontend
+          npm ci
+      - name: Run tests 
+        run: |
+          cd starter/frontend
+          npm test --passWithNoTests   
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1      
+      - name: Build and push Docker Images to AWS ECR
+        run: |
+          cd starter/frontend
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ env.FRONTEND_ECR }}
+          docker build --build-arg=REACT_APP_MOVIE_API_URL=${{env.REACT_APP_MOVIE_API_URL}} --tag=frontend:latest .
+          docker tag frontend:latest ${{ env.FRONTEND_ECR }}/frontend:latest
+          docker push ${{ env.FRONTEND_ECR }}/frontend:latest
+      
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps: 
+      - name: checkout code
+        uses: actions/checkout@v3           
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1    
+      - name: Deploy to K8s cluster
+        run: |
+          cd starter/frontend/k8s
+          aws eks update-kubeconfig --region us-east-1 --name cluster
+          kustomize edit set image frontend=${{ env.FRONTEND_ECR }}/frontend:latest
+          kustomize build | kubectl apply -f -
