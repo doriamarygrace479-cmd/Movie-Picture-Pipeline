@@ -64,7 +64,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Check cred
-        run: echo '${{ env.ECR_R }}'
+        run: echo '${{ env.ECR_R }} - ${{ env.AWS_REGION }}'
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
