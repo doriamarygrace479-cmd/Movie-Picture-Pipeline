@@ -14,7 +14,6 @@ defaults:
 env:
   AWS_REGION: us-east-1
   ECR_REPO: backend
-  ECR_R: ${{ secrets.ECR_REG }}
   EKS_CLUSTER: cluster
 
 jobs:
@@ -63,8 +62,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Check cred
-        run: echo '${{ env.ECR_R }} - ${{ env.AWS_REGION }}'
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -79,7 +76,7 @@ jobs:
           docker build -t ${{ secrets.ECR_REG }}/${{ env.ECR_REPO }}:${{ github.sha }} .
           docker push ${{ secrets.ECR_REG }}/${{ env.ECR_REPO }}:${{ github.sha }}
       - name: Configure kube
-        run: aws eks update-config --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
       - name: Deploy kube
         run: |
           cd k8s
