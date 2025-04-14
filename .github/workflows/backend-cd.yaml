@@ -83,7 +83,7 @@ jobs:
       - name: Deploy kube build
         run: |
           cd k8s
-          kustomize build | kubectl apply -f -
+          kustomize build | kubectl --validate=false apply -f -
       - name: Get URL
         run: |
           URL=${kubectl get svc backend -o jsonpath='{.status.loadbalancer.ingress[0].hostname}'}
