@@ -9,7 +9,6 @@ on:
 defaults:
       run:
         working-directory: starter/backend
-        shell: bash
 
 env:
   AWS_REGION: us-east-1
@@ -81,6 +80,9 @@ jobs:
         run: |
           cd k8s
           kustomize edit set image backend=${{ secrets.ECR_REG }}/${{ env.ECR_REPO }}:${{ github.sha }}
+      - name: Deploy kube build
+        run: |
+          cd k8s
           kustomize build | kubectl apply -f -
       - name: Get URL
         run: |
