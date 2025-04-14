@@ -13,7 +13,7 @@ defaults:
 
 env:
   AWS_REGION: us-east-1
-  REACT_APP_MOVIE_API_URL: 
+  REACT_APP_MOVIE_API_URL: a21bb2cb9f53c4f17aaf597fcf23308f-793490898.us-east-1.elb.amazonaws.com
   ECR_REPO: frontend
   EKS_CLUSTER: cluster
 
@@ -93,5 +93,4 @@ jobs:
           kustomize build | kubectl apply -f -
       - name: Get status
         run: |
-          kubectl get services
-          kubectl get pods
+          kubectl get svc frontend
