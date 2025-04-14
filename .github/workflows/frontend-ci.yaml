@@ -72,4 +72,4 @@ jobs:
       - name: Build docker
         run: docker run --name=mp-frontend -p 3000:3000 -d mp-frontend
       - name: Stop image
-        run: docker stop
+        run: docker stop mp-frontend

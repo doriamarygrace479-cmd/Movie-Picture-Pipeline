@@ -73,4 +73,4 @@ jobs:
       - name: Test curl
         run: curl http://localhost:5000/movies
       - name: Stop image
-        run: docker stop
+        run: docker stop mp-backend:${{ github.sha }}
