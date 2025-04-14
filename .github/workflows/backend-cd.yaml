@@ -14,6 +14,7 @@ defaults:
 env:
   AWS_REGION: us-east-1
   ECR_REPO: backend
+  ECR_R: ${{ secrets.ECR_REG }}
   EKS_CLUSTER: cluster
 
 jobs:
@@ -40,6 +41,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - name: Check cred
+        run: echo '${{ env.ECR_R }}'
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup python
@@ -63,7 +66,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Check cred
-        run: echo ${{ secrets.ECR_REG }}
+        run: echo '${{ env.ECR_R }}'
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
