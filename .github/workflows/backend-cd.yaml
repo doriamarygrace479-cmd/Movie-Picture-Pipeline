@@ -86,5 +86,4 @@ jobs:
           kustomize build | kubectl --validate=false apply -f -
       - name: Get URL
         run: |
-          URL=${kubectl get svc backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'}
-          echo $URL
+          kubectl get svc backend
