@@ -1,0 +1,6 @@
+Flask>=2.0.0
+flask_cors>=3.0.0
+
+[dev]
+pytest
+flake8

@@ -1,0 +1,42 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths: [frontend/**]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with: { node-version: 18 }
+      - run: cd frontend && npm ci
+      - run: cd frontend && npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with: { node-version: 18 }
+      - run: cd frontend && npm ci
+      - run: cd frontend && CI=true npm test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    env:
+      REACT_APP_MOVIE_API_URL: http://backend-service
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with: { node-version: 18 }
+      - run: |
+          cd frontend
+          docker build --build-arg REACT_APP_MOVIE_API_URL=$REACT_APP_MOVIE_API_URL -t frontend:ci .

@@ -1,0 +1,23 @@
+# frontend/k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: frontend:latest  # Will be replaced by Kustomize
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REACT_APP_MOVIE_API_URL
+              value: "http://backend-service:5000"  # Use Kubernetes service name
