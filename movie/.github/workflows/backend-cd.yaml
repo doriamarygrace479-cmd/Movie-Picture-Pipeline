@@ -55,11 +55,15 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Build and Push Docker Image
+      - name: Build and Push Docker Image (for x86_64)
         run: |
           cd backend
-          docker build -t ${{ env.ECR_REGISTRY }}/backend:${GITHUB_SHA} .
-          docker push ${{ env.ECR_REGISTRY }}/backend:${GITHUB_SHA}
+          docker buildx create --name mybuilder || true
+          docker buildx use mybuilder
+          docker buildx build \
+            --platform=linux/amd64 \
+            -t ${{ env.ECR_REGISTRY }}/backend:${GITHUB_SHA} \
+            --push .
 
   deploy:
     runs-on: ubuntu-latest
