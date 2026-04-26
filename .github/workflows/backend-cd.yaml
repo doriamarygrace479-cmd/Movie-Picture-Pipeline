@@ -27,7 +27,7 @@ jobs:
         run: pip install pipenv
 
       - name: Install dependencies
-        run: pipenv install
+        run: pipenv install --dev
 
       - name: Run linter
         run: pipenv run lint
@@ -50,7 +50,7 @@ jobs:
         run: pip install pipenv
 
       - name: Install dependencies
-        run: pipenv install
+        run: pipenv install --dev
 
       - name: Run tests
         run: pipenv run test
@@ -94,7 +94,6 @@ jobs:
           ECR_REGISTRY: ${{ secrets.ECR_BACKEND }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws eks update-kubeconfig --name cluster --region us-east-1
           cd starter/backend/k8s
           kustomize edit set image backend=$ECR_REGISTRY:$IMAGE_TAG
           kustomize build | kubectl apply -f -
