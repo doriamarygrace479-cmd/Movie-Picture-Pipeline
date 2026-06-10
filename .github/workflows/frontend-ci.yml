@@ -49,7 +49,7 @@ jobs:
         with:
           node-version: 16
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: starter/frontend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -63,7 +63,7 @@ jobs:
     needs: [lint, test]
     defaults:
       run:
-        working-directory: frontend
+        working-directory: starter/frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
