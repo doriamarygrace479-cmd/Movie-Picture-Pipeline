@@ -81,7 +81,7 @@ jobs:
 
       - name: Build docker image
         run: docker build -t ${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }} .
-
+        
       - name: Push docker image
         run: docker push ${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }}
 
