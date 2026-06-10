@@ -17,7 +17,8 @@ RUN apk update && \
 RUN mkdir -p /var/www/app && mkdir /app
 
 COPY Pipfile* /app
-RUN cd /app && pipenv install --system --deploy --ignore-pipfile
+RUN pip install pipenv && pipenv requirements > requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . /app
 
