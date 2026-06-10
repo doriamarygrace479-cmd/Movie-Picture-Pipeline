@@ -78,9 +78,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build docker image
-        run: |
-          docker build \
-            --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} \
+        run: docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }}
             -t ${{ secrets.ECR_FRONTEND_REPO }}:${{ github.sha }} .
 
       - name: Push docker image
