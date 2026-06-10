@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend
+        working-directory: starter/backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,7 +65,7 @@ jobs:
     needs: [lint, test]
     defaults:
       run:
-        working-directory: backend
+        working-directory: starter/backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
