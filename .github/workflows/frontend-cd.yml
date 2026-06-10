@@ -115,5 +115,3 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: kustomize build | kubectl apply -f -
-
-      
