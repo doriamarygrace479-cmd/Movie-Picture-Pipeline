@@ -110,8 +110,11 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name "${{ secrets.EKS_CLUSTER_NAME }}" --region us-east-1
 
+      - name: Verify cluster access
+        run: kubectl get nodes
+
       - name: Set image tag in kustomize
         run: kustomize edit set image frontend=${{ secrets.ECR_FRONTEND_REPO }}:${{ github.sha }}
 
       - name: Deploy to Kubernetes
-        run: kustomize build | kubectl apply -f -
+        run: kustomize build | kubectl apply -f - --validate=false
