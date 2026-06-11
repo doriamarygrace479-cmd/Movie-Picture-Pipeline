@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: 891975886417.dkr.ecr.us-east-1.amazonaws.com/mp-frontend:sha256:b7738c66dffd189da789d9bf2d840dc5f0cd539aadc8fef49fb708fc43be7ade
+          image: 891975886417.dkr.ecr.us-east-1.amazonaws.com/mp-frontend
           ports:
             - containerPort: 3000
