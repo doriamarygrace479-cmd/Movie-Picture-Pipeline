@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backend
+          image: nginx:latest
           ports:
-            - containerPort: 5000
+            - containerPort: 3000
