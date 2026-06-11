@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: 891975886417.dkr.ecr.us-east-1.amazonaws.com/backend
+          image: 891975886417.dkr.ecr.us-east-1.amazonaws.com/mp-backend
           ports:
             - containerPort: 3000
