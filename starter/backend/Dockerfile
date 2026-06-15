@@ -9,3 +9,5 @@ RUN pip install --no-cache-dir pipenv && pipenv install --system --deploy
 COPY . .
 
 EXPOSE 5000
+
+CMD ["python", "__init__.py"]
