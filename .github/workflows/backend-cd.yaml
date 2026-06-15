@@ -34,6 +34,10 @@ jobs:
 
       - name: Run lint
         run: pipenv run lint
+        
+      - name: Run tests
+        run: pipenv run pytest -v
+
 
   test:
     name: Test Backend
