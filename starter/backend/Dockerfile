@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["python", "-m", "backend"]
+CMD ["python", "__init__.py"]

@@ -7,4 +7,4 @@ namespace: default
 images:
 - name: backend
   newName: 850748373480.dkr.ecr.us-east-1.amazonaws.com/backend
-  newTag: 702db30c64fc57462a5c9f5e1dba923ef9fffe3c
+  newTag: 1cdba40f6870659f8369617ce7b8bdab452797b8
