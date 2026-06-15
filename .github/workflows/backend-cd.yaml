@@ -16,6 +16,7 @@ jobs:
     defaults:
       run:
         working-directory: starter/backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,6 +41,7 @@ jobs:
     defaults:
       run:
         working-directory: starter/backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,6 +67,7 @@ jobs:
     defaults:
       run:
         working-directory: starter/backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,13 +80,16 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
+        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build docker image
-        run: docker build -t ${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }} .
-        
+        run: |
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }} .
+
       - name: Push docker image
-        run: docker push ${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }}
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }}
 
   deploy:
     name: Deploy Backend
@@ -92,6 +98,7 @@ jobs:
     defaults:
       run:
         working-directory: starter/backend/k8s
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -113,7 +120,15 @@ jobs:
         run: aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
 
       - name: Set image tag in kustomize
-        run: kustomize edit set image backend=${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }}
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          IMAGE_URI="${ACCOUNT_ID}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_BACKEND_REPO }}:${{ github.sha }}"
+          echo "Deploying ${IMAGE_URI}"
+          kustomize edit set image backend=${IMAGE_URI}
 
       - name: Deploy to Kubernetes
-        run: kustomize build | kubectl apply -f -
+        run: |
+          kustomize build . | kubectl apply -f -
+
+      - name: Verify backend rollout
+        run: kubectl rollout status deployment/backend --timeout=300s || true
