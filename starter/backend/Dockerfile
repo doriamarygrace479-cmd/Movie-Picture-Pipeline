@@ -1,27 +1,24 @@
-FROM public.ecr.aws/docker/library/python:3.10-alpine
-ENV FLASK_RUN_HOST=0.0.0.0
+FROM  public.ecr.aws/docker/library/node:18.14.2-alpine3.17
 
-WORKDIR /
-RUN adduser -u 1000 -D app
-RUN apk update && \
-  apk add \
-  pcre \
-  pcre-dev \
-  build-base \
-  gcc \
-  linux-headers \
-  openssl \
-  libffi-dev \
-  && pip install pipenv
+ARG REACT_APP_MOVIE_API_URL
+ENV REACT_APP_MOVIE_API_URL=${REACT_APP_MOVIE_API_URL}
 
-RUN mkdir -p /var/www/app && mkdir /app
+WORKDIR /app
 
-COPY Pipfile* /app
-RUN pip install pipenv && pipenv requirements > requirements.txt
-RUN pip install -r requirements.txt
+# Copy dependdency files
+COPY package*.json ./
 
-COPY . /app
+# Install packages
+RUN npm ci
 
-EXPOSE 5000
+# Copy code
+COPY . .
 
-CMD ["python", "app.py"]
+# Build the app
+RUN npm run build
+
+# Expose the port used by the React app
+EXPOSE 3000
+
+# Start the React app when the container starts
+CMD ["npm", "run", "serve"]
