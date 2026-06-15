@@ -33,8 +33,8 @@ jobs:
         run: pipenv install --dev
 
       - name: Run lint
-        run: pipenv run lint
-        
+        run: pipenv run flake8 .
+
       - name: Run tests
         run: pipenv run pytest -v
 
